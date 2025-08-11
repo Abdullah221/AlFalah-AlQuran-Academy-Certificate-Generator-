@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certificate of Completion</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @page {
+        size: A4 landscape;
+        margin: 0;
+      }
+
+      html {
+        font-size: 10px;
+        width: 297mm;
+        height: 210mm;
+      }
+
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: white;
+      }
+      /*
+            .All {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: flex-start; /* or center if you want vertical center */
+      /* gap: 40px; optional spacing between certificates */
+      /* padding: 40px 0; to give vertical space on print */
+      /* } */
+
+      .certificate-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        margin: auto;
+        flex-direction: row;
+      }
+      .color {
+        color: #006b56;
+      }
+      .bg-color {
+        background-color: #006b56;
+      }
+      .border-color {
+        border-top: 0.3rem solid #000;
+      }
+      .sidebar {
+        color: white;
+        padding: 2rem;
+        width: 23%;
+        /* height: 100%; */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .sidebar img {
+        width: 75%;
+        display: block;
+        margin: 0 auto 1rem auto;
+      }
+
+      .vision-box {
+        border: 0.2rem solid white;
+        padding: 0.8rem;
+        font-size: 1.2rem;
+        text-align: justify;
+        width: 100%;
+      }
+
+      .vision-title {
+        background: linear-gradient(to bottom, #bb8732, #f4e0c3);
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 0.2rem;
+        font-size: 1.8rem;
+        width: 100%;
+      }
+
+      .circle {
+        width: 20rem;
+        height: 20rem;
+        background: linear-gradient(to bottom, #d3bc79, #f4e0c3);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 1.6rem auto;
+        font-weight: bold;
+        font-size: 2.4rem;
+        color: #333;
+        font-family: "BibleScrT";
+      }
+      .address-box {
+        background-color: white;
+        color: black;
+        padding: 1.28rem;
+        text-align: center;
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+      }
+
+      .main-content {
+        width: 77%;
+        padding: 1.6rem;
+      }
+
+      .academy-title {
+        font-family: Impact, sans-serif;
+        font-size: 7rem;
+        text-align: right;
+        color: #fff;
+        /* margin-bottom: ; */
+      }
+
+      .project-subtitle {
+        text-align: right;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #fff;
+        margin-bottom: 1.6rem;
+      }
+
+      .certificate-box {
+        background: white;
+        padding: 2.4rem;
+        margin-top: 1.5rem;
+        border: 0.1rem solid #ccc;
+        height: 610px;
+        position: relative;
+      }
+
+      .certificate-title {
+        font-family: Algerian, serif;
+        text-align: center;
+        font-size: 3.5rem;
+      }
+
+      .student-name {
+        position: absolute;
+        top: 35%;
+        right: 20%;
+        font-size: 3rem;
+        font-family: "BibleScrT", serif;
+        font-weight: 800;
+        text-align: center;
+      }
+
+      .certificate-text {
+        font-family: "BibleScrT", serif;
+        font-size: 2.4rem;
+        text-align: justify;
+        margin-top: 1.6rem;
+      }
+
+      .certificate-heading {
+        font-family: "Eras Demi ITC", "Arial";
+        font-size: 2.4rem;
+        font-weight: 900;
+      }
+
+      .date-and-address p {
+        font-size: 1.6rem;
+      }
+
+      .signature-block img {
+        width: 12.8rem;
+        display: block;
+        margin: 1rem auto;
+      }
+
+      .signature-block .teacher-name {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+      .signature-block p {
+        text-align: center;
+        font-size: 1.6rem;
+        line-height: 1.5;
+      }
+
+      @media print {
+        html,
+        body {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="AllDocuments" class="All"></div>
+    <script>
+      // Retrieve Course Details and Student Details from localStorage
+      const courseDetailsFromStorage = JSON.parse(
+        localStorage.getItem("courseDetails")
+      );
+      const studentDetailsFromStorage = JSON.parse(
+        localStorage.getItem("studentDetails")
+      );
+
+      // Certificate Context Data for each level
+      const CertificateContext = [
+        {
+          Excellence:
+            "successfully completed the course with distinction on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "successfully completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "participated in the course, completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+        {
+          Excellence:
+            "successfully completed the course with distinction on ${completionDate}. The course included understanding of 66% of Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "successfully completed the course on ${completionDate}. The course included understanding of 66% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "completed the course on ${completionDate}. The course included understanding of 66% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "participated in the course, completed the course on ${completionDate}. The course included understanding of 66% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+        {
+          Excellence:
+            "QC3 successfully completed the course with distinction on ${completionDate}. The course included understanding of 80% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "QC3 successfully completed the course on ${completionDate}. The course included understanding of 80% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "QC3 completed the course on ${completionDate}. The course included understanding of 80% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "QC3 participated in the course, completed the course on ${completionDate}. The course included understanding of 80% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+        {
+          Excellence:
+            "QC4 successfully completed the course with distinction on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "QC4 successfully completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "QC4 completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "QC4 participated in the course, completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+        {
+          Excellence:
+            "QC5 successfully completed the course with distinction on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "QC5 successfully completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "QC5 completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "QC5 participated in the course, completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+        {
+          Excellence:
+            "QC6 successfully completed the course with distinction on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "QC6 successfully completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "QC6 completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "QC6 participated in the course, completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+        {
+          Excellence:
+            "QC7 successfully completed the course with distinction on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Merit:
+            "QC7 successfully completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Completion:
+            "QC7 completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+          Participation:
+            "QC7 participated in the course, completed the course on ${completionDate}. The course included understanding of 50% Qur'anic words. The duration of the course was 20 hours of intensive learning.",
+        },
+      ];
+
+      // Fallback in case the data doesn't exist in localStorage
+      const courseDetails = courseDetailsFromStorage || {
+        batch: 213,
+        level: 1,
+        completionDate: "March 02, 2025 (Ramdan 01, 1446 A.H)",
+        issueDate: "August 06, 2025 [Safar 11, 1447]",
+        location: "Haleem Tower, G.T Road Nishterabad, Peshawar",
+        teacher: "Amjad Jan",
+      };
+
+      const studentDetails = studentDetailsFromStorage || [
+        { name: "Ahmad", percentage: 75, category: "Merit" },
+        { name: "Amjad Jan", percentage: 46, category: "Participation" },
+        { name: "Ali Raza", percentage: 60, category: "Completion" },
+      ];
+
+      // Function to generate certificates for each student
+      function renderCertificates() {
+        const container = document.getElementById("AllDocuments");
+
+        studentDetails.forEach((student) => {
+          // Clone the certificate structure
+          const certificateClone = document.createElement("div");
+          certificateClone.innerHTML = `
+        <div class="certificate-container">
+            <!-- Left Sidebar -->
+        <div class="sidebar bg-color">
+          <img src="assets/Alfalah-logo.png" alt="Logo" />
+          <div class="vision">
+            <div class="vision-title color">VISION</div>
+            <div class="vision-box">
+              <p>
+                ISLAMIC COMMUNITY CENTRE has been established with the objective
+                to bring together like minded families for the revival of Islamic
+                Ummah, starting at the grass root level. It strives to promote the
+                Islamic way of living on a 24x7 basis in our personal, family &
+                business lives.
+              </p>
+            </div>
+          </div>
+          <div class="circle">
+            <div>Batch: <span id="batch">${courseDetails.batch}</span></div>
+            <div>Percentage: <span id="percentage">${
+              student.percentage
+            }</span>%</div>
+          </div>
+          <div class="address-box">
+            <strong>ISLAMIC COMMUNITY CENTRE</strong><br />
+            St. 26, Opposite NPF, E-11/4,<br />
+            Alfalah Manzil, Islamabad.<br />
+            <a href="mailto:quran@alfalahmanzil.net"
+              >Email: quran@alfalahmanzil.net</a
+            ><br />
+            <a href="https://www.facebook.com/alfalahmanzil"
+              >facebook.com/alfalahmanzil</a
+            >
+          </div>
+        </div>
+
+          <!-- Main Content -->
+        <div class="main-content bg-color d-flex flex-column justify-content-between">
+          <div class="container-fluid">
+            <h1 class="academy-title">ALFALAH AL-QUR'AN ACADEMY</h1>
+            <h4 class="project-subtitle">
+              A Project of Islamic Community Centre
+            </h4>
+          </div>
+          <div class="container-fluid">
+            <div
+              class="certificate-box d-flex flex-column justify-content-between"
+            >
+              <div class="container">
+                <h2 class="certificate-title color">
+                  CERTIFICATE OF <span id="category">${student.category}</span>
+                </h2>
+                <h4 class="text-center certificate-heading">Understand Qur'an</h4>
+                <h5 class="text-center certificate-heading">
+                  Level - <strong id="level">${courseDetails.level}</strong>
+                </h5>
+              </div>
+              <div class="student-name color" id="studentName">${
+                student.name
+              }</div>
+              <p class="certificate-text">
+                Certified that Mr. / Mrs. / Ms.
+                <strong>________________________________________</strong><br />
+                <span id="certificate-context">
+                    ${getCertificateContext(student.category)}
+                  </span>
+              </p>
+
+              <div class="row mt-4">
+                <div
+                  class="col-6 d-flex flex-column justify-content-end date-and-address"
+                >
+                  <p class="row">
+                    <strong class="col-3">Dated: </strong><span id="issueDate" class="col-9">${
+                      courseDetails.issueDate
+                    }</span>
+                  </p>
+                  <p class="row">
+                    <strong class="col-3">Location: </strong><span id="location" class="col-9">${
+                      courseDetails.location
+                    }</span>
+                  </p>
+                </div>
+                <div class="col-3 signature-block align-self-stretch">
+                  <img
+                    src="assets/${courseDetails.teacher}.png"
+                    alt="Signature"
+                    id="teacher-signature"
+                  />
+                  <p class="sign border-color teacher-name">
+                    <strong id="teacher">${courseDetails.teacher}</strong>
+                  </p>
+                  <p>Teacher</p>
+                </div>
+                <div class="col-3 signature-block align-self-stretch">
+                  <img src="assets/Arshad-Iqbal-Malik-Sign.png" alt="Signature" />
+                  <p class="sign border-color teacher-name">
+                    <strong id="chairman">Arshad Iqbal Malik</strong>
+                  </p>
+                  <p>Chairman</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+      `;
+          const colorElements = certificateClone.querySelectorAll(".color");
+          const bgColorElements =
+            certificateClone.querySelectorAll(".bg-color");
+
+          // Get the student's category
+          const studentCategory = student.category;
+
+          // Apply the styles based on the student's category
+          colorElements.forEach((colorElement) => {
+            if (studentCategory === "Excellence") {
+              colorElement.style.color = "#006b56"; // Green for Excellence
+            } else if (studentCategory === "Merit") {
+              colorElement.style.color = "#9a2c30"; // Red for Merit
+            } else if (studentCategory === "Completion") {
+              colorElement.style.color = "#2e358f"; // Blue for Completion
+            } else if (studentCategory === "Participation") {
+              colorElement.style.color = "#2b3690"; // Purple for Participation
+            }
+          });
+
+          bgColorElements.forEach((bgColorElement) => {
+            if (studentCategory === "Excellence") {
+              bgColorElement.style.backgroundColor = "#006b56"; // Green for Excellence
+            } else if (studentCategory === "Merit") {
+              bgColorElement.style.backgroundColor = "#9a2c30"; // Red for Merit
+            } else if (studentCategory === "Completion") {
+              bgColorElement.style.backgroundColor = "#2e358f"; // Blue for Completion
+            } else if (studentCategory === "Participation") {
+              bgColorElement.style.backgroundColor = "#2b3690"; // Purple for Participation
+            }
+          });
+
+          function getCertificateContext(category) {
+            const context = CertificateContext[courseDetails.level - 1]; // Adjusting for zero index
+            return context[category]
+              ? context[category].replace(
+                  "${completionDate}",
+                  courseDetails.completionDate
+                )
+              : "";
+          }
+
+          container.appendChild(certificateClone);
+        });
+      }
+
+      // Call function to render certificates
+      renderCertificates();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Course & Student Data Entry</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="p-4">
+    <div class="container">
+      <h2 class="mb-4">Course Setup Form</h2>
+
+      <!-- Course Details -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">Course Details</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label"
+              >Enter Course Details (One per Line)</label
+            >
+            <textarea
+              id="courseDetails"
+              class="form-control"
+              rows="6"
+              placeholder="e.g. Batch Number\nTeacher Name\nCourse Level (1-7)\nCompletion Date (YYYY-MM-DD)\nIssue Date (YYYY-MM-DD)\nLocation"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Data Entry -->
+      <div class="card mb-4">
+        <div class="card-header bg-success text-white">Enter Student Data</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Enter Student Names (One per Line)</label>
+            <textarea
+              id="studentNames"
+              class="form-control"
+              rows="5"
+              placeholder="e.g. Ahmad\nAmjad\nSara"
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Enter Percentages (One per Line)</label>
+            <textarea
+              id="studentPercentages"
+              class="form-control"
+              rows="5"
+              placeholder="e.g. 85\n72\n56"
+            ></textarea>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary mt-3"
+            onclick="generateStudentDetails()"
+          >
+            Generate Student Details
+          </button>
+        </div>
+      </div>
+
+      <hr />
+
+      <!-- Output -->
+      <h4>Generated Objects</h4>
+      <pre id="output" style="background: #f9f9f9; padding: 1rem"></pre>
+    </div>
+
+    <script>
+      // Fetch Hijri date from Aladhan API
+      async function getHijriDate(gregorianDate) {
+        const [year, month, day] = gregorianDate.split("-"); // "YYYY-MM-DD" => ["2025", "03", "02"]
+        const formatted = `${day}-${month}-${year}`; // "02-03-2025"
+
+        try {
+          const response = await fetch(
+            `https://api.aladhan.com/v1/gToH?date=${formatted}`
+          );
+          const data = await response.json();
+          if (data.code === 200) {
+            const hijri = data.data.hijri;
+            return `${hijri.month.en} ${hijri.day}, ${hijri.year} A.H`;
+          } else {
+            return "";
+          }
+        } catch (error) {
+          console.error("Hijri fetch failed", error);
+          return "";
+        }
+      }
+
+      // Function to determine student grade category based on percentage
+      function getCategory(percentage) {
+        if (percentage >= 90) return "Excellence";
+        if (percentage >= 70) return "Merit";
+        if (percentage >= 50) return "Completion";
+        if (percentage >= 40) return "Participation";
+        return "Failed";
+      }
+
+      // Format date to readable text
+      function formatDateToText(dateStr) {
+        if (!dateStr) return "";
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateStr).toLocaleDateString(undefined, options);
+      }
+
+      // Main function with Hijri support
+      async function generateStudentDetails() {
+        // Get course details from textarea
+        const courseDetailsInput = document
+          .getElementById("courseDetails")
+          .value.split("\n")
+          .map((item) => item.trim());
+
+        if (courseDetailsInput.length !== 6) {
+          alert("Please provide exactly 6 course details (one per line).");
+          return;
+        }
+
+        const [batch, teacher, courseLevel, completionRaw, issueRaw, location] =
+          courseDetailsInput;
+
+        // Validate inputs
+        if (
+          !batch ||
+          !teacher ||
+          !courseLevel ||
+          !completionRaw ||
+          !issueRaw ||
+          !location
+        ) {
+          alert("All course details are required.");
+          return;
+        }
+
+        if (!/^[1-7]$/.test(courseLevel)) {
+          alert("Course level must be between 1 and 7.");
+          return;
+        }
+
+        // Get Hijri dates
+        const completionHijri = await getHijriDate(completionRaw);
+        const issueHijri = await getHijriDate(issueRaw);
+
+        // Build courseDetails object
+        const courseDetails = {
+          batch: parseInt(batch),
+          teacher,
+          level: parseInt(courseLevel),
+          completionDate: `${formatDateToText(
+            completionRaw
+          )} (${completionHijri})`,
+          issueDate: `${formatDateToText(issueRaw)} (${issueHijri})`,
+          location,
+        };
+
+        // Build student list
+        const names = document
+          .getElementById("studentNames")
+          .value.split("\n")
+          .map((item) => item.trim());
+        const percentages = document
+          .getElementById("studentPercentages")
+          .value.split("\n")
+          .map((item) => parseFloat(item.trim()));
+
+        if (names.length !== percentages.length) {
+          alert("Names and percentages count mismatch.");
+          return;
+        }
+
+        const studentDetails = names.map((name, index) => ({
+          name,
+          percentage: percentages[index],
+          category: getCategory(percentages[index]),
+        }));
+
+        // Save to local storage
+        localStorage.setItem("courseDetails", JSON.stringify(courseDetails));
+        localStorage.setItem("studentDetails", JSON.stringify(studentDetails));
+
+        // Output
+        document.getElementById("output").textContent =
+          "const courseDetails = " +
+          JSON.stringify(courseDetails, null, 2) +
+          ";\n\n" +
+          "const studentDetails = " +
+          JSON.stringify(studentDetails, null, 2) +
+          ";";
+
+        // Redirect
+        window.location.href = "certificate.html";
+      }
+    </script>
+  </body>
+</html>
